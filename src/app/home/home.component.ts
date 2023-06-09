@@ -8,7 +8,7 @@ import { HousingService } from '../services/housing.service';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     HousingLocationComponent
   ],
   template: `
@@ -33,8 +33,11 @@ export class HomeComponent {
   filteredLocationList: HousingLocation[] = [];
 
   constructor(private housingService: HousingService) {
-    this.housingLocationList = this.housingService.getAllHousingLocations();
-    this.filteredLocationList = this.housingLocationList;
+    this.housingService.getAllHousingLocations().then((housingLocationList:
+      HousingLocation[]) => {
+      this.housingLocationList = housingLocationList;
+      this.filteredLocationList = housingLocationList;
+    });
   }
 
   filterResults = (text: string) => {
@@ -42,11 +45,11 @@ export class HomeComponent {
       this.filteredLocationList = this.housingLocationList;
     }
 
-    this.filteredLocationList = this.housingLocationList.filter(housingLocation => 
+    this.filteredLocationList = this.housingLocationList.filter(housingLocation =>
       housingLocation?.city.toLowerCase().includes(text.toLowerCase()) ||
-      housingLocation?.name.toLowerCase().includes(text.toLowerCase()) || 
+      housingLocation?.name.toLowerCase().includes(text.toLowerCase()) ||
       housingLocation?.state.toLowerCase().includes(text.toLowerCase())
-      );
+    );
   }
 
 }
